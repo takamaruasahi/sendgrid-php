@@ -967,7 +967,13 @@ class Mail implements \JsonSerializable
         $this->setFrom($from);
 	    $this->setSubject($subject);
 	    $personalization = new Personalization();
-        $personalization->addTo($to);
+        if (is_array($to)) {
+            foreach ($to as $value) {
+                $personalization->addTo($value);
+            }
+        } else {
+            $personalization->addTo($to);
+        }
         $this->addPersonalization($personalization);
         $this->addContent($content);
     }
@@ -990,6 +996,11 @@ class Mail implements \JsonSerializable
     public function getPersonalizations()
     {
         return $this->personalization;
+    }
+
+    public function resetPersonalizations()
+    {
+        $this->personalization = array();
     }
 
     public function setSubject($subject)
